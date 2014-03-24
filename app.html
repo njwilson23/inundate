@@ -1,0 +1,42 @@
+<html>
+
+<head>
+</head>
+
+<body>
+
+  <style>
+    #map {
+      height: 300px;
+    }
+    path.coast {
+      fill-opacity: 0.0;
+      stroke-width: 1.0;
+      stroke: #000000;
+    }
+
+  </style>
+
+
+  <div id="map"></div>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="scrollmap.js" charset="utf-8"></script>
+  <script type="text/javascript">
+
+    svg = d3.select('div#map').append('svg')
+            .attr('width', 800)
+            .attr('height', 600);
+    var bounds = [-130, -70, 20, 60];
+    var map = new Scrollmap(svg, bounds);
+
+    map.readIndex('data/coast/index.json');   // the modern coastline data
+       //.readIndex('data/slr100/');          // 1m of SLR
+
+
+  </script>
+
+</body>
+
+</html

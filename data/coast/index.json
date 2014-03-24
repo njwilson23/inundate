@@ -5,8 +5,9 @@
       "addr": "ne_10m_coastline.topojson"
     }
   ],
-  "topAddr": "data/",
-  "projection": "geographical"
+  "topAddr": "data/coast/",
+  "projection": "geographical",
+  "class": "coast"
 }
 
 
