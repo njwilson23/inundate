@@ -1,0 +1,12 @@
+{
+  "tiles": [
+    {
+      "bounds": [-180, 180, -80, 80],
+      "addr": "ne_10m_coastline.topojson"
+    }
+  ],
+  "topAddr": "data/",
+  "projection": "geographical"
+}
+
+
