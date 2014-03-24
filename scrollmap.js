@@ -1,14 +1,14 @@
 'use strict;'
 /*
-scrollmap.js
-This implements a scrollable map drawn using d3 and the <canvas> element. This is a major component of inundate.js.
+This implements a scrollable map drawn using d3 and the <canvas> element. This
+is a major component of inundate.js.
 */
 
 function Scrollmap(bounds) {
 
-  if (bounds[1] !> bounds[0]) {
+  if (bounds[1] < bounds[0]) {
     throw "x1 must be greater than x0";
-  } else if (bounds[3] !> bounds[2]) {
+  } else if (bounds[3] < bounds[2]) {
     throw "x3 must be greater than x2";
   }
 
@@ -20,12 +20,10 @@ function Scrollmap(bounds) {
 }
 
 Scrollmap.prototype.readIndex = function (addr) {
-  var index = null;
-  d3.json(addr, function (data, err) {
-    index = data;
-    return err;
+  var sm = this;
+  d3.json(addr, function (err, data) {
+    sm.indices.push(data);
   })
-  this.indices.push(index);
   return this;
 }
 
@@ -47,8 +45,9 @@ Scrollmap.prototype._tilesAt = function (xy) {
 
     for (var it=0; it < index.tiles.length; it++) {
       var tile = index.tiles[it];
-      if (((tile.xy[0] > bounds[0]) && (tile.xy[0] < bounds[1])) ||
-          ((tile.xy[1] >= bounds[2]) && tile.xy[1] < bounds[3])) {
+      var b = tile.bounds;
+      if (((b[1] > bounds[0]) || (b[0] < bounds[1])) &&
+          ((b[3] > bounds[2]) || (b[2] < bounds[3]))) {
         tiles.push(tile);
       }
     }
@@ -61,14 +60,14 @@ Scrollmap.prototype.update = function () {
 
   // add tiles missing from local
   for (var i=0; i<tiles.length; i++) {
-    if !(tiles[i] in this.tiles) {
+    if (tiles[i] in this.tiles === false) {
       this.tiles.push(tiles[i]);
     }
   }
 
   // remove local tiles not in the new list
   for (var i=0; i<this.tiles.length; i++) {
-    if !(this.tiles[i] in tiles) {
+    if (this.tiles[i] in tiles === false) {
       this.tiles.pop(i);
     }
   }
@@ -78,14 +77,14 @@ Scrollmap.prototype.update = function () {
 
 Scrollmap.prototype.loadTile = function (addr) {
   var sm = this;
-  d3.json(addr, function (data, err) {
+  d3.json(addr, function (err, data) {
     // check for errors?
     sm.tiles.push(data);
   })
   return this;
 }
 
-Scrollmap.prototype.drawTo = function (ctx) {
+Scrollmap.prototype.drawTo = function (svg) {
   // a bunch of messy draw logic
   // using d3 or direct to canvas?
   console.log('draw');
